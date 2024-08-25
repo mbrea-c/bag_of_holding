@@ -1,0 +1,12 @@
+[package]
+name = "zusammen_app"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+bevy = "0.14.1"
+clap = "4.5.16"
+crossbeam-channel = "0.5.13"
+lightyear = "0.17.0"
+rand = "0.8.5"
+zusammen_plugin = { path = "../zusammen_plugin" }
