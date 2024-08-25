@@ -117,8 +117,8 @@ pub enum ZusammenAppMode {
 
 #[derive(Clone)]
 pub struct ZusammenAppConfig {
-    plugin: Arc<dyn ZusammenPlugin + Send + Sync + 'static>,
-    mode: ZusammenAppMode,
+    pub plugin: Arc<dyn ZusammenPlugin + Send + Sync + 'static>,
+    pub mode: ZusammenAppMode,
 }
 
 pub fn run_multiplayer_app(config: ZusammenAppConfig) {
