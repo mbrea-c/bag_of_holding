@@ -1,20 +1,21 @@
 use crate::ZusammenPlugin;
 use bevy::prelude::*;
+use std::sync::Arc;
 
 #[derive(Default, Clone)]
 pub struct CombinedPlugins {
-    plugins: Vec<Box<dyn ZusammenPlugin + Clone + Send + Sync + 'static>>,
+    plugins: Vec<Arc<dyn ZusammenPlugin + Send + Sync + 'static>>,
 }
 
 impl CombinedPlugins {
-    pub fn new(plugins: impl IntoIterator<Item = Box<dyn ZusammenPlugin>>) -> Self {
+    pub fn new() -> Self {
         Self {
-            plugins: plugins.into_iter().collect(),
+            plugins: Vec::new(),
         }
     }
 
-    pub fn and<C: ZusammenPlugin + 'static>(mut self, c: C) -> Self {
-        self.plugins.push(Box::new(c));
+    pub fn and<C: ZusammenPlugin + Send + Sync + 'static>(mut self, c: C) -> Self {
+        self.plugins.push(Arc::new(c));
         self
     }
 }
