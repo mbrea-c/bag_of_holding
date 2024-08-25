@@ -9,6 +9,6 @@ pub struct ProtocolPlugin {
 
 impl Plugin for ProtocolPlugin {
     fn build(&self, app: &mut App) {
-        self.zusammen.add_client(app);
+        self.zusammen.add_protocol(app);
     }
 }

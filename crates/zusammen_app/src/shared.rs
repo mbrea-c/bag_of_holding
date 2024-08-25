@@ -9,6 +9,6 @@ pub struct SharedPlugin {
 
 impl Plugin for SharedPlugin {
     fn build(&self, app: &mut App) {
-        self.zusammen.add_client(app);
+        self.zusammen.add_shared(app);
     }
 }
