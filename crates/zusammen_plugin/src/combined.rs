@@ -1,9 +1,9 @@
 use crate::ZusammenPlugin;
 use bevy::prelude::*;
 
-#[derive(Default)]
+#[derive(Default, Clone)]
 pub struct CombinedPlugins {
-    plugins: Vec<Box<dyn ZusammenPlugin>>,
+    plugins: Vec<Box<dyn ZusammenPlugin + Clone + Send + Sync + 'static>>,
 }
 
 impl CombinedPlugins {
