@@ -13,6 +13,7 @@ use bevy::{
 };
 use lightyear::{client::config::ClientConfig, server::plugin::ServerPlugins};
 use std::{
+    net::{Ipv4Addr, SocketAddr},
     sync::{
         mpsc::{channel, Receiver, Sender},
         Arc,
@@ -42,7 +43,7 @@ pub struct ServerAppMessage {
 
 #[derive(Resource)]
 pub struct ClientZusammenAppStuff {
-    tx: Sender<ServerAppMessage>,
+    tx: Option<Sender<ServerAppMessage>>,
     config: ZusammenAppConfig,
 }
 
@@ -112,7 +113,9 @@ fn server_app<M, N>(
 #[derive(Clone, Copy, PartialEq, Eq)]
 pub enum ZusammenAppMode {
     Server { port: u16 },
-    Both,
+    Client { port: u16, ip: Ipv4Addr },
+    Host { port: u16 },
+    Lobby,
 }
 
 #[derive(Clone)]
@@ -145,7 +148,80 @@ pub fn run_multiplayer_app(config: ZusammenAppConfig) {
             );
             app.run();
         }
-        ZusammenAppMode::Both => {
+
+        ZusammenAppMode::Client { port, ip } => {
+            let client_params = ClientParams {
+                transport: ClientTransportParams::UdpSocket {
+                    server_addr: SocketAddr::new(ip.into(), port),
+                },
+            };
+            let shared_params = SharedParams {
+                tick_duration: Duration::from_secs_f64(1. / 64.),
+            };
+
+            let client_config = make_client_config(&client_params, &shared_params);
+            let mut app = client_app(
+                client_config,
+                ClientZusammenAppStuff {
+                    tx: None,
+                    config: config.clone(),
+                },
+                ClientPlugin {
+                    zusammen: config.plugin.clone(),
+                },
+                SharedPlugin {
+                    zusammen: config.plugin.clone(),
+                },
+            );
+            app.run();
+        }
+
+        ZusammenAppMode::Host { port } => {
+            let (tx, rx) = channel::<ServerAppMessage>();
+
+            thread::spawn(move || server_thread(rx));
+
+            let (from_server_send, from_server_recv) = crossbeam_channel::unbounded();
+            let (to_server_send, to_server_recv) = crossbeam_channel::unbounded();
+
+            let client_params = ClientParams {
+                transport: ClientTransportParams::LocalChannel {
+                    recv: from_server_recv,
+                    send: to_server_send,
+                },
+            };
+            let shared_params = SharedParams {
+                tick_duration: Duration::from_secs_f64(1. / 64.),
+            };
+            let server_params = ServerParams {
+                port,
+                local_channel: Some((to_server_recv, from_server_send)),
+            };
+
+            let client_config = make_client_config(&client_params, &shared_params);
+            let mut app = client_app(
+                client_config,
+                ClientZusammenAppStuff {
+                    tx: None,
+                    config: config.clone(),
+                },
+                ClientPlugin {
+                    zusammen: config.plugin.clone(),
+                },
+                SharedPlugin {
+                    zusammen: config.plugin.clone(),
+                },
+            );
+            let server_msg = ServerAppMessage {
+                server_params: server_params.clone(),
+                shared_params: shared_params.clone(),
+                zusammen: config.plugin.clone(),
+            };
+            tx.send(server_msg).unwrap();
+            app.run();
+        }
+
+        ZusammenAppMode::Lobby => {
             let (tx, rx) = channel::<ServerAppMessage>();
 
             thread::spawn(move || server_thread(rx));
@@ -161,7 +237,7 @@ pub fn run_multiplayer_app(config: ZusammenAppConfig) {
             let mut app = client_app(
                 client_config,
                 ClientZusammenAppStuff {
-                    tx,
+                    tx: Some(tx),
                     config: config.clone(),
                 },
                 ClientPlugin {
@@ -216,7 +292,12 @@ impl ClientZusammenAppManager<'_> {
                 shared_params: params.shared.clone(),
                 zusammen: self.server_tx.config.plugin.clone(),
             };
-            self.server_tx.tx.send(server_msg).unwrap();
+            self.server_tx
+                .tx
+                .as_mut()
+                .unwrap()
+                .send(server_msg)
+                .unwrap();
         }
     }
 }
