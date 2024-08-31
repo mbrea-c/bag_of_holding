@@ -9,6 +9,7 @@ use bevy::{
     prelude::*,
     render::RenderPlugin,
     scene::ScenePlugin,
+    sprite::SpritePlugin,
     state::app::StatesPlugin,
 };
 use lightyear::{client::config::ClientConfig, server::plugin::ServerPlugins};
