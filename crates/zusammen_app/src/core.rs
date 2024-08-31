@@ -91,6 +91,7 @@ fn server_app<M, N>(
     app.add_plugins(PbrPlugin::default());
     app.add_plugins(GltfPlugin::default());
     app.add_plugins(TransformPlugin::default());
+    app.add_plugins(SpritePlugin::default());
     app.add_plugins(GizmoPlugin);
 
     if should_log {
