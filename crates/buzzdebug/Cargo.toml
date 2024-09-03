@@ -4,8 +4,8 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-bevy = "0.14.1"
+bevy = { workspace = true }
 bevy-inspector-egui = "0.25.2"
-lightyear = "0.17.1"
+lightyear = { workspace = true }
 serde = { version = "1.0.209", features = ["derive"] }
 zusammen_plugin = { path = "../zusammen_plugin" }

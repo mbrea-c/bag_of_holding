@@ -1,3 +1,12 @@
 [workspace]
-members = [ "crates/buzzdebug", "crates/misc_macros", "crates/zusammen_app","crates/zusammen_plugin"]
+members = [
+    "crates/buzzdebug",
+    "crates/misc_macros",
+    "crates/zusammen_app",
+    "crates/zusammen_plugin",
+]
 resolver = "2"
+
+[workspace.dependencies]
+bevy = { version = "0.14" }
+lightyear = { git = "https://github.com/cBournhonesque/lightyear.git", rev = "8b50b693bf5d62416f391adb84584ebaa7b3ae6d" }
