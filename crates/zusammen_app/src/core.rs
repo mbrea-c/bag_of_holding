@@ -284,7 +284,7 @@ pub struct ClientZusammenAppManager<'w> {
 }
 
 impl ClientZusammenAppManager<'_> {
-    pub fn ready_to_go_bros(&mut self, params: NetParameters) {
+    pub fn update_client_and_start_server(&mut self, params: NetParameters) {
         let new_client_config = make_client_config(&params.client, &params.shared);
         *self.client_config = new_client_config;
 
