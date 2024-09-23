@@ -105,7 +105,7 @@ pub fn make_client_config(
         shared: shared_config(shared_params),
         net: net_config,
         prediction: client::PredictionConfig {
-            maximum_input_delay_before_prediction: client_params.input_delay_ticks,
+            maximum_input_delay_before_prediction: client_params.maximum_input_delay_ticks,
             correction_ticks_factor: client_params.correction_ticks_factor,
             ..default()
         },
