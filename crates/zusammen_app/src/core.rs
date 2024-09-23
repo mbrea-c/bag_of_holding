@@ -126,7 +126,7 @@ pub struct ZusammenAppConfig {
     pub mode: ZusammenAppMode,
 }
 
-pub fn run_multiplayer_app(config: ZusammenAppConfig) {
+pub fn run_multiplayer_app(config: ZusammenAppConfig, input_delay: u16, correction_factor: f32) {
     match config.mode {
         ZusammenAppMode::Server { port } => {
             let shared_params = SharedParams {
@@ -156,6 +156,8 @@ pub fn run_multiplayer_app(config: ZusammenAppConfig) {
                 transport: ClientTransportParams::UdpSocket {
                     server_addr: SocketAddr::new(ip.into(), port),
                 },
+                maximum_input_delay_ticks: input_delay,
+                correction_ticks_factor: correction_factor,
             };
             let shared_params = SharedParams {
                 tick_duration: Duration::from_secs_f64(1. / 64.),
@@ -191,6 +193,8 @@ pub fn run_multiplayer_app(config: ZusammenAppConfig) {
                     recv: from_server_recv,
                     send: to_server_send,
                 },
+                maximum_input_delay_ticks: input_delay,
+                correction_ticks_factor: correction_factor,
             };
             let shared_params = SharedParams {
                 tick_duration: Duration::from_secs_f64(1. / 64.),
@@ -230,6 +234,8 @@ pub fn run_multiplayer_app(config: ZusammenAppConfig) {
 
             let client_params = ClientParams {
                 transport: ClientTransportParams::None,
+                maximum_input_delay_ticks: input_delay,
+                correction_ticks_factor: correction_factor,
             };
             let shared_params = SharedParams {
                 tick_duration: Duration::from_secs_f64(1. / 64.),

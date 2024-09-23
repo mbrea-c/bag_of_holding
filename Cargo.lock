@@ -947,6 +947,23 @@ dependencies = [
 ]
 
 [[package]]
+name = "bevy_mod_debugdump"
+version = "0.11.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "30f0eab3099d7d474b25a95a6a2a945e6089d75e099af5a571fe896f7c1a455b"
+dependencies = [
+ "bevy_app",
+ "bevy_color",
+ "bevy_ecs",
+ "bevy_render",
+ "bevy_utils",
+ "lexopt",
+ "once_cell",
+ "petgraph",
+ "pretty-type-name",
+]
+
+[[package]]
 name = "bevy_pbr"
 version = "0.14.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2592,6 +2609,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "graph_view"
+version = "0.1.0"
+dependencies = [
+ "bevy",
+ "bevy_mod_debugdump",
+ "tempfile",
+]
+
+[[package]]
 name = "grid"
 version = "0.14.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2901,6 +2927,12 @@ dependencies = [
  "ogg",
  "tinyvec",
 ]
+
+[[package]]
+name = "lexopt"
+version = "0.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "baff4b617f7df3d896f97fe922b64817f6cd9a756bb81d40f8883f2f66dcb401"
 
 [[package]]
 name = "libc"
@@ -4301,6 +4333,19 @@ dependencies = [
  "num-traits",
  "serde",
  "slotmap",
+]
+
+[[package]]
+name = "tempfile"
+version = "3.12.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "04cbcdd0c794ebb0d4cf35e88edd2f7d2c4c3e9a5a6dab322839b321c6a87a64"
+dependencies = [
+ "cfg-if",
+ "fastrand",
+ "once_cell",
+ "rustix",
+ "windows-sys 0.59.0",
 ]
 
 [[package]]

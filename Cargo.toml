@@ -1,6 +1,6 @@
 [workspace]
 members = [
-    "crates/buzzdebug",
+    "crates/buzzdebug", "crates/graph_view",
     "crates/misc_macros",
     "crates/zusammen_app",
     "crates/zusammen_plugin",

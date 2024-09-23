@@ -44,6 +44,9 @@ pub struct SharedParams {
 #[derive(Clone, Debug)]
 pub struct ClientParams {
     pub transport: ClientTransportParams,
+    /// Maximum number of input delay ticks before prediction starts
+    pub maximum_input_delay_ticks: u16,
+    pub correction_ticks_factor: f32,
 }
 
 #[derive(Clone, Debug)]
@@ -101,6 +104,11 @@ pub fn make_client_config(
     let client_config = ClientConfig {
         shared: shared_config(shared_params),
         net: net_config,
+        prediction: client::PredictionConfig {
+            maximum_input_delay_before_prediction: client_params.input_delay_ticks,
+            correction_ticks_factor: client_params.correction_ticks_factor,
+            ..default()
+        },
         ..default()
     };
 
